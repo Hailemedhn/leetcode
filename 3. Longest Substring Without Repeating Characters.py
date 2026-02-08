@@ -3,6 +3,7 @@ class Solution:
         lengthOfLongestStringWithoutRepeating = 0
         longestStringWithoutRepeating = ""
         i,jumpIndex = 0,0
+
         while i < len(s):
             if s[i] not in longestStringWithoutRepeating:
                 longestStringWithoutRepeating += s[i]
@@ -12,7 +13,7 @@ class Solution:
                 
                 jumpIndex = longestStringWithoutRepeating.index(s[i]) + 1
                 longestStringWithoutRepeating = longestStringWithoutRepeating[jumpIndex:]
-                i -= 1
-                jumpIndex = 0
+                continue
             i +=  1
+            
         return max(lengthOfLongestStringWithoutRepeating, len(longestStringWithoutRepeating))
