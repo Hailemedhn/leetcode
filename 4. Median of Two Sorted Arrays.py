@@ -49,3 +49,5 @@ class Solution:
               
             lst3 = sorted(lst1[start1: end1] + lst2[start2: end2])
             return self.findMedian(lst3, 0, len(lst3))
+        
+#### Beats 100% of users' soluton in leetCode####
