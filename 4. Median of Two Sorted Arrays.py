@@ -1,43 +1,51 @@
 from typing import List
 
 class Solution:
-    def findMedian(self, lst: List[int]) -> float:
-        if len(lst) % 2 != 0:
-            return lst[len(lst)//2]
+    def findMedian(self, lst: List[int], start:int, end: int) -> float:
+        if (end-start) % 2 != 0:
+            return lst[(end-start)//2 + start]
         else:
-            return (lst[len(lst)//2] + lst[len(lst)//2 - 1]) / 2
+            return (lst[(end-start)//2 + start] + lst[(end-start)//2 - 1 + start]) / 2
 
-    def findGreaterThanMedian(self,lst: List[int]) -> int:
-        if len(lst) % 2 == 0:
-            return len(lst) // 2 - 1
+    def findCut(self, start: int, end: int) -> int:
+        if (end-start) % 2 == 0:
+            return (end-start) // 2 - 1
         else:
-            return len(lst) // 2
-    def findLessThanMedian(self,lst: List[int]) -> int:
-        if len(lst) % 2 == 0:
-            return len(lst) // 2 - 1
-        else:
-            return len(lst) // 2
-
+            return (end-start) // 2
     def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
-        shortList = nums1 if len(nums1) < len(nums2) else nums2
-        longList = nums2 if nums1 is shortList else nums1
-        while len(shortList) > 1:
-            if len(shortList) == 2 or len(longList) == 2:
-                return self.findMedian(sorted(shortList + longList))
-            medianShortList = self.findMedian(shortList)
-            medianLongList = self.findMedian(longList)
-            if medianShortList < medianLongList:
-                cut = min(self.findGreaterThanMedian(shortList), self.findLessThanMedian(longList))
-                shortList = shortList[cut:]
-                longList = longList[:-cut]
-            elif medianShortList > medianLongList:
-                cut = min(self.findGreaterThanMedian(shortList), self.findLessThanMedian(longList))
-                shortList = shortList[:-cut]
-                longList = longList[cut:]
+        lst1 = nums1
+        lst2 = nums2
+        end1 = len(lst1)
+        end2 = len(lst2)
+        start1, start2 = 0,0
+
+        while end1 - start1 > 2 and end2 - start2 > 2:
+            m1 = self.findMedian(lst1, start1, end1)
+            m2 = self.findMedian(lst2, start2, end2)
+            cut = min(self.findCut(start1, end1), self.findCut(start2, end2))
+            if m1 < m2:
+                start1 = start1 + cut
+                end2 = end2 - cut
+            elif m1 > m2:
+                start2 = start2 + cut
+                end1 = end1 - cut
             else:
-                return medianShortList
+                return m1
         else:
-            if len(shortList) == 1:
-                return self.findMedian(sorted(shortList + longList))
-            else:
-                return self.findMedian(longList)
+            if (end1 - start1) > (end2 - start2) and (end1 - start1) > 4:
+                if (end1 - start1) % 2 == 0:
+                    start1 = (end1 - start1) // 2 - 2 + start1
+                    end1 = start1 + 4
+                else:
+                    start1 = (end1 - start1) // 2 - 1 + start1
+                    end1 = start1 + 3
+            elif (end1 - start1) < (end2 - start2) and (end2 - start2) > 4:
+                if (end2 - start2) % 2 == 0:
+                    start2 = (end2 - start2) // 2 - 2 + start2
+                    end2 = start2 + 4
+                else:
+                    start2 = (end2 - start2) // 2 - 1 + start2
+                    end2 = start2 + 3
+              
+            lst3 = sorted(lst1[start1: end1] + lst2[start2: end2])
+            return self.findMedian(lst3, 0, len(lst3))
