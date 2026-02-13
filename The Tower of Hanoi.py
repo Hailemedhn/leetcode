@@ -27,7 +27,7 @@ def validBraces(n: int) -> List [str]:
             valids += [b + a for a in validBraces(j) for b in validBraces(n-j)]
 
         valids += ["(" + a + ")" for a in validBraces(n-1)]
-        return list((valids))
+        return list(set(valids))
     
 print(len(validBraces(7)))
         

@@ -10,35 +10,33 @@ class Solution:
         """
         Delete `node` at n-th place from end.
 
-        Policy:
-        - n >= length  -> delete the first item
-        - n <= 0 -> do nothing
-
         Returns the (possibly new) head.
         """
+        
+        # Deleting from an empty LinkedList just returns the empty LinkedList   
+        if head is None:
+            return head
+        #Find out the length of the list
         length = 1
         node = head
         while node.next is not None:
             node = node.next
             length += 1
-        n = length - n
-        # Deleting from an empty LinkedList just returns the empty LinkedList   
-        if head is None:
-            return head
+
+        pos = length - n
+
         # For negative pos values or when pos == 0 delets the head
-        if n <= 0:
+        if pos == 0:
             curr = head.next
             head.next = None
+            head = None
             return curr
         
         # prepate to walk the list with refrence to the current and previous nodes
         prev = head
         curr = head.next
-        step = n - 1
+        step = pos - 1
 
-        # The case where the linkedlist is just one node long
-        if curr is None:
-            return head
         #wallk the list for a list longer than 1 node
         while step > 0 and curr.next is not None :
             prev = curr
@@ -47,5 +45,7 @@ class Solution:
         #for deleting from the middle or the tail of the list
         if step == 0:
             prev.next = curr.next
+            curr.next = None
+            curr = None
         
         return head
